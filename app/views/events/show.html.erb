@@ -45,6 +45,7 @@
     <thead>
       <tr class="highlight-heading">
         <th>Category</th>
+        <th>Section</th>
         <th>Total Count</th>
         <th>Edit Seat</th>
       </tr>
@@ -53,6 +54,7 @@
       <% @seats.each do |seat| %>
         <tr>
           <td><%= seat[:category] %></td>
+          <td><%= seat[:section] %></td>
           <td><%= seat[:total_count] %></td>
           <td><%= link_to 'Edit', edit_event_seat_path(@event, seat), style: 'display: inline-block; padding: 10px 20px; background-color: #4caf50; color: #fff; text-decoration: none; border: none; border-radius: 5px; cursor: pointer;', class: 'button' %></td>
         </tr>
@@ -70,6 +72,7 @@
     <thead>
       <tr class="highlight-heading">
         <th>Category</th>
+        <th>Section</th>
         <th>Number of Guests</th>
         <th>Total Seats</th>
         <th>Allocated Seats</th>
@@ -81,6 +84,13 @@
       <% @seating_summary.each do |category| %>
         <tr>
           <td><%= category[:category] %></td>
+          <td>
+            <select class="section-dropdown">
+              <% category[:sections].each do |section| %>
+              <option value="<%= section %>"><%= section %></option>
+              <% end %>
+            </select>
+          </td>
           <td><%= category[:guests_count] %></td>
           <td><%= category[:total_seats] %></td>
           <td><%= category[:allocated_seats] %></td>
@@ -91,6 +101,21 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  // Function to update the total count based on the selected section in Seating Summary
+  $(document).on('change', '.section-dropdown', function() {
+    var selectedSection = $(this).val();
+    var totalSeats = 0;
+    $('#seating-summary-table tbody tr').each(function() {
+      if ($(this).find('td:nth-child(2)').text() === selectedSection) {
+        totalSeats += parseInt($(this).find('td:nth-child(4)').text());
+      }
+    });
+    $('#total-count').text(totalSeats);
+  });
+</script>
+
 
 <h2 style="margin-left:20%;margin-bottom:20px;margin-top:40px; font-size: 56px; color: #333; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">Manage Invited Guests</h2>
 <!--to add link for the nested children-->
@@ -103,9 +128,9 @@
         <th>Email</th>
         <th>Affiliation</th>
         <th>Category</th>
+        <th>Section</th>
         <th>Allocated seat</th>
         <th>Committed seats</th>
-        <th>Guest committed</th>
         <th>Status</th>
         <th>Edit guest</th>
         <th>Destroy guest</th>
@@ -119,8 +144,8 @@
           <td><%= guest[:email] %></td>
           <td><%= guest[:affiliation] %></td>
           <td><%= guest[:category] %></td>
+          <td><%= guest[:section] %></td>
           <td><%= guest[:alloted_seats] %></td>
-          <td><%= guest[:commited_seats] %></td>
           <td><%= guest[:commited_seats] %></td>
           <td><%= guest[:status] %></td>
           <td><%= link_to 'Edit', edit_event_guest_path(@event, guest), style: 'display: inline-block; padding: 10px 20px; background-color: #4caf50; color: #fff; text-decoration: none; border: none; border-radius: 5px; cursor: pointer', class: 'button' %></td>
@@ -170,11 +195,17 @@ of the tickets bought, and 'Amount' means on the other hand the total payment ma
   </thead>
   <tbody>
     <% @event_box_office_data.drop(1).each do |row| %>
+      <% unless row.nil? %>
       <tr>
-        <% row.each do |cell| %>
-          <td><%= cell %></td>
+        <% if row.respond_to?(:each) %>
+          <% row.each do |cell| %>
+            <td><%= cell %></td>
+          <% end %>
+        <% else %>
+          <td><%= row %></td>
         <% end %>
       </tr>
+    <% end %>
     <% end %>
   </tbody>
 </table>
@@ -195,9 +226,9 @@ of the tickets bought, and 'Amount' means on the other hand the total payment ma
         <th>Referred</th>
         <th>Status</th>
         <th>Tickets</th>
-        <th>Amount</th>
+        <th>Amount($)</th>
         <th>Input Reward</th>
-        <th>Rewards</th>
+        <th>Rewards($)</th>
         <th>Calculation</th>
       </tr>
       <% @referral_data.each do |referraldatum| %>
@@ -218,3 +249,18 @@ of the tickets bought, and 'Amount' means on the other hand the total payment ma
     </tbody>
   </table>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Function to update the total count based on the selected section in Seating Summary
+  $(document).on('change', '.section-dropdown', function() {
+    var selectedSection = $(this).val();
+    var totalSeats = 0;
+    $('#seating-summary-table tbody tr').each(function() {
+      if ($(this).find('td:nth-child(2)').text() === selectedSection) {
+        totalSeats += parseInt($(this).find('td:nth-child(4)').text());
+      }
+    });
+    $('#total-count').text(totalSeats);
+  });
+</script>
