@@ -13,6 +13,7 @@ class EventsController < ApplicationController
     # <!--===================-->
     # <!--to show the uploaded spreadsheet-->
     @event = current_user.events.find(params[:id])
+    @category = @event.seats.pluck(:category).uniq
     if @event.event_box_office.present?
       @event_box_office_data = []
       # Load the spreadsheet using the SpreadsheetUploader
@@ -26,9 +27,7 @@ class EventsController < ApplicationController
         @event_box_office_data << row_data
     end
 
-
       @referral_data = Referral.where(event_id: @event.id)
-
 
       email_index = 0
       tickets_index = 0
@@ -51,20 +50,6 @@ class EventsController < ApplicationController
              end
           end
       end
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
 
     else
       flash[:notice] = "No box office spreadsheet uploaded for this event"
