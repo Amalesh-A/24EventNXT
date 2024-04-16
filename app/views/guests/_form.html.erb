@@ -53,6 +53,11 @@
   </div>
 
   <div>
+      <%= form.label :section, style: "display: block" %>
+      <%= form.collection_select :section, @event.seats, :section, :section, prompt: "Select a section" %>
+  </div>
+
+  <div>
     <%= form.label :alloted_seats, style: "display: block" %>
     <%= form.number_field :alloted_seats %>
   </div>
