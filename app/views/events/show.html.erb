@@ -72,7 +72,6 @@
     <thead>
       <tr class="highlight-heading">
         <th>Category</th>
-        <th>Section</th>
         <th>Number of Guests</th>
         <th>Total Seats</th>
         <th>Allocated Seats</th>
@@ -84,13 +83,6 @@
       <% @seating_summary.each do |category| %>
         <tr>
           <td><%= category[:category] %></td>
-          <td>
-            <select class="section-dropdown">
-              <% category[:sections].each do |section| %>
-              <option value="<%= section %>"><%= section %></option>
-              <% end %>
-            </select>
-          </td>
           <td><%= category[:guests_count] %></td>
           <td><%= category[:total_seats] %></td>
           <td><%= category[:allocated_seats] %></td>
